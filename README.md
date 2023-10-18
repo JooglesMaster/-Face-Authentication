@@ -1,2 +1,2 @@
 # -Face-Authentication
-Comp 3000 Final Year Project Githbub
+Comp 3000 Final Year Project Github
