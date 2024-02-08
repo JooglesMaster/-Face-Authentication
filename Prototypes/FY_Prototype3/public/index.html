@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekognition Prototype</title>
+    <style>
+        /* Ensure the canvas and image are layered correctly */
+        #canvasOverlay {
+            pointer-events: none;  /* Make sure the canvas does not interfere with image interactions */
+            z-index: 2;  /* Place the canvas above the image */
+        }
+
+        #preview {
+            position: relative;
+            z-index: 1;  /* Place the image below the canvas */
+        }
+    </style>
+</head>
+<body>
+    <h1>Image from S3 Bucket with AWS Rekognition</h1>
+    <form action="http://localhost:3001/analyze" method="POST" enctype="multipart/form-data">
+        <input id="analyzeButton" type="submit" value="Analyze">
+    </form>
+    <div id="imageContainer" style="position: relative; display: inline-block;">
+        <canvas id="canvasOverlay" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
+        <img id="preview" src="/image" alt="Image from S3" style="position: absolute; top: 0; left: 0; z-index: 1;">
+    </div>
+    <pre id="result"></pre>
+<script>
+        const form = document.querySelector('form');
+        const resultElem = document.getElementById('result');
+        const previewElem = document.getElementById('preview');
+
+        previewElem.onload = function() {
+        const canvas = document.getElementById('canvasOverlay');
+        canvas.width = previewElem.clientWidth;
+        canvas.height = previewElem.clientHeight;
+        canvas.style.left = previewElem.offsetLeft + 'px';
+        canvas.style.top = previewElem.offsetTop + 'px';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            resultElem.textContent = JSON.stringify(data, null, 2);4
+            
+            drawBoundingBoxes(data.Labels);
+        });
+        function drawBoundingBoxes(labels) {
+        const canvas = document.getElementById('canvasOverlay');
+        const ctx = canvas.getContext('2d');
+
+        // Clear previous drawings
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        labels.forEach(label => {
+
+            label.Instances.forEach(instance => {
+                const box = instance.BoundingBox;
+
+                const width = box.Width * canvas.width;
+                const height = box.Height * canvas.height;
+                const left = box.Left * canvas.width;
+                const top = box.Top * canvas.height;
+
+                // Draw the bounding box
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(left, top, width, height);
+
+                ctx.fillStyle = 'greem';
+                ctx.font = "50px Arial";  // Adjust font size and family as needed
+                ctx.fillText(label.Name, left, top > 20 ? top - 5 : top + 20);  // Adjust positioning as needed
+
+            });
+        });
+
+        // Show the canvas
+        canvas.style.display = 'block';
+    }
+
+    function displayImage(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewElem.src = e.target.result;  // This triggers the previewElem.onload event
+                previewElem.style.display = 'block';
+
+                // Adjust canvas size and position to match the image
+                const canvas = document.getElementById('imageContainer');
+                canvas.width = previewElem.clientWidth;
+                canvas.height = previewElem.clientHeight;
+                canvas.style.left = previewElem.offsetLeft + 'px';
+                canvas.style.top = previewElem.offsetTop + 'px';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // analyze the photo from the s3 bucket
+    document.getElementById('analyzeButton').addEventListener('click', async () => {
+        const response = await fetch('/analyze');
+        const data = await response.json();
+
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        drawBoundingBoxes(data.Labels); // Assuming you have a function to draw bounding boxes
+    });
+
+
+</script>
+</body>
+</html>
