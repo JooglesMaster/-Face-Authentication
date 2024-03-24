@@ -1,0 +1,33 @@
+{
+  "name": "myhelloworldapp",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@aws-amplify/storage": "^5.9.6",
+    "@react-three/drei": "^9.102.6",
+    "@react-three/fiber": "^8.15.19",
+    "aws-amplify": "^5.3.12",
+    "aws-sdk": "^2.1491.0",
+    "expo": "~49.0.15",
+    "expo-asset": "~8.10.1",
+    "expo-gl": "~13.0.1",
+    "expo-image-picker": "~14.3.2",
+    "expo-status-bar": "~1.6.0",
+    "expo-three": "^7.0.0",
+    "react": "18.2.0",
+    "react-native": "0.72.10",
+    "react-native-aws3": "^0.0.9",
+    "react-native-gl-model-view": "^1.6.0",
+    "three": "^0.145.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}
