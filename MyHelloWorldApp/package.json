@@ -10,12 +10,15 @@
   },
   "dependencies": {
     "@aws-amplify/storage": "^5.9.6",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.3.29",
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.15.19",
     "aws-amplify": "^5.3.12",
     "aws-sdk": "^2.1491.0",
     "expo": "~49.0.15",
     "expo-asset": "~8.10.1",
+    "expo-camera": "~13.4.4",
     "expo-gl": "~13.0.1",
     "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
@@ -24,7 +27,10 @@
     "react-native": "0.72.10",
     "react-native-aws3": "^0.0.9",
     "react-native-gl-model-view": "^1.6.0",
-    "three": "^0.145.0"
+    "react-native-particle-system": "^0.9.1",
+    "react-native-particles": "^0.0.8",
+    "three": "^0.145.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
